@@ -1,0 +1,63 @@
+phase 2
+x /25c 0x804a144
+____________________________________________________________________________________________
+
+phase 3
+first number is 0, put other 5, do i r to see next number. Do this until all 6 numbers found
+____________________________________________________________________________________________
+
+phase 4
+obvious first int is 3-6
+second int 574 b/c 0x23e compared to second int
+run that with wrong char and inspect al (p $al) and get 121. 121 in ascii is y
+ans = 3 y 574
+____________________________________________________________________________________________
+phase 5
+(scanf = %d %d)
+
+x/15dw 0x804a1a0
+0x804a1a0 <array.3126>:         11      6       1       12
+0x804a1b0 <array.3126+16>:      9       0       3       2
+0x804a1c0 <array.3126+32>:      13      14      8       4
+0x804a1d0 <array.3126+48>:      10      5       15
+
+second to last cmp says edx must be 3 or bomb explodes. Look at loop of assembly
+int a = input1;
+int b = input2;
+
+if(a != 15){
+  int ecx = 0;
+  int edx = 0;
+ 
+  do{
+     edx++;
+     a = array[a]
+     ecd = ecx + a;
+  }while(a != 15);
+
+  if(d == 3 && c == b)
+     return;
+}
+
+ call explode_bomb;
+
+looking over this, we can only loop 3 times because of d == 3, find an index of array where
+when d == 3, a == 5.
+This is index 4 which goes to index 4, 9, 14.
+
+input1 = 4;
+
+add up values of the three index which will equal input 2.
+
+input2 = 9 + 14 + 15 = 38
+
+Final ans = 4 38
+_________________________________________________________________________________________
+
+phase 6
+call is 6 numbers, and cant be the same from 1-6
+it's a linked list so you have to find the value of the 6 nodes, looking at the strings of the code, the 6 nodes are called node1... node6
+p/s node1 and all other nodes and store them
+sort the nodes from smallest to greatest and that is the input
+
+my was 3 6 5 2 1 4

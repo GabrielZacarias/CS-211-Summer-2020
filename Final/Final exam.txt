@@ -1,0 +1,395 @@
+1. Given two properly allocated and initialized n x n matrices A and B, complete the following function that computes A x B and returns a pointer to the resulting matrix. 
+
+    double ** matrix_multiply(double **A, double **B, int n){
+        // your implementation here
+    }   
+
+    A:
+        double **c = (double**)malloc(sizeof(double*) * n);
+
+        //allocate each row for c
+        for(int i = 0; i < n; i++){
+            c[i] = (double*)malloc(sizeof(double) * n);
+        }
+
+        //set row and col to 0 on new matrix and multiply
+        for(int i = 0; i < n; i++){
+            for(j = 0; j < n; j++){
+                c[i][j] = 0;
+
+                for(int k = 0; k < n; k++){
+                    c += A[i][k] * B[k][j];
+                }
+            }
+        }
+
+        return c;
+
+
+2. Assume the following node structure for a binary tree:
+
+    typedef struct node{
+        int value;
+        Node *leftChild;
+        Node *rightChild;
+    } Node;
+
+    Complete the following function that given some root node and some value, will search the binary tree and return a pointer to the node with containing the value. If the value can't be found, return NULL. 
+
+    Node *binary_search(Node *root, int val){
+        // your implementation here
+    }
+
+    A:
+        if(root == NULL)
+        return NULL;
+
+        //create pointer
+        Node* ptr = root;
+
+        //check if value is the root
+        if(ptr->value == val)
+            return ptr;
+
+        while(ptr != NULL && ptr->value != val){
+            if(ptr->value > val)
+                ptr = ptr->leftChild;
+            else if(ptr->value < val)
+                ptr = ptr->rightChild;
+        }
+
+        //value found
+        if(ptr->value == val)
+            return ptr;
+
+        //value not found
+        else if(ptr == NULL)
+            return NULL;
+
+
+3. Assume the following node structure for a linked list:
+
+    typedef struct node{
+        int value;
+        Node *next;
+    } Node;
+
+    Complete the following function, that given a pointer to the head of a linked list and given a value, removes the node that contains the value and returns a pointer to the node removed. You can assume that there is only 1 unique instance of the value in the linked list if it exists in the list. The function should return NULL if the value could not be found and removed.
+
+    Node *removeLL(Node *head, int val){
+    // your implementation here 
+    }
+
+    A:
+        //since head is always there and dummy then we dont check (from email)
+        Node *ptr = head->next;
+        Node *prev = head;
+        Node *found = NULL;
+
+        //traverse linked list
+        while(ptr != NULL && ptr->value != val){
+            prev = ptr;
+            ptr = ptr->next;
+        }
+
+        if(ptr->value == val){
+            found = ptr;                     //store that node for return
+            ptr = ptr->next;              //move ptr one over
+            prev->next = ptr;          //removes wanted node from list
+            return found;                //return the removed node
+        }
+        else if(ptr == NULL){
+            return NULL;                //value never found
+        }
+
+4. Can every 32-bit integer be represented as a 32-bit float? Explain.
+    A:
+        Not every 32-bit integer can be represented as a 32-bit float. For this example, a 32 bit float can only have up to 23-24 bit integers (depending on how you count 0). A floating bit needs the rest of the bits for the exponent. That said, with floating points there are fractional numbers and 32-bit integers there are none.
+
+5. Assume we have 13-bit value. What is the range of values that we can represent if we interpret the value as a:
+    a) unsigned integer?
+    b) signed integer?
+
+    A:
+        Unsigned:
+        Lowest: 0
+        Highest: 2^13 - 1 = 8192 - 1 = 8191
+    
+        Signed:
+        Lowest: -2^(13-1) = -4096
+        Highest: 2^(13-1)-1 = 4096 - 1 = 4095
+
+6. Assume we are using 9-bit signed integers. Convert -167 in decimal to its binary signed integer representation. Show all work for full credit.
+
+    A:
+        Step 1 find +167:                               010100111
+                                                        2^7 + 2^5 + 2^2 + 2^1 + 2^0
+                                                        128 + 32 + 4 + 2 + 1 = 167
+
+        Step 2 ones complement:                         010100111 --> 101011000
+        Step 3 twos complement:                         101011000 --> 101011001
+        Step 4 check binary:                            101011001 --> -2^8 + 2^6 + 2^4 + 2^3 + 2^0  --> -256 + 64 + 16 + 8 + 1
+                                                                                                    = -167
+        Final ans: -167 == 101011001
+
+7. You are given a 10-bit floating point representation based on IEEE-754 representation with 1 sign bit, 4 exponent bits, and 5 fraction bits. Convert the following floating point binary the decimal value it represents:
+
+    1011010110
+
+8. You are given a 10-bit floating point representation based on IEEE-754 representation with 1 sign bit, 4 exponent bits, and 5 fraction bits.
+
+    Express 12.125 in this representation.
+    Show all work to get full credit.
+    
+    A:
+        12.125 would be 1100.001
+
+        1.100001* 2^3
+        E = exp - bias
+        3 = exp - 7
+        exp = 10
+
+        0 1010 100001
+
+        F = 1.100001 but need to round this since can only be 5
+
+        1.10000 1.100001 1.10001
+
+        round to even since in middle
+        1.100001 = 1.10010
+        S = (-1)^0 = 1
+        E = (2^3 + 2^2) - (2^(4-1)-1) = 10 - 7 = 3
+        F = 1.10010
+
+        V = 1 * 2^3 * 1.10010
+        V = 1100.10
+        V = 2^3 + 2^2 + 2^-1
+        V = 12.5
+
+9. What is the difference between caller-saved vs callee-saved?
+
+    A:
+        Caller-saved are volatile. They are used to hold temp data, while Callee-saved are non-volatile registers and hold values preserved across functions.
+
+10. Describe what the RET instruction does.
+
+    A:
+        In assembly, ret pops the return address from the stack. It does this directly into the instruction pointer.
+
+11. Assume the following function foo() in C:
+
+    int foo(){
+    int a = 8;
+    int b = 7;
+    int c = 2;
+    int d = 10;
+    int z = bar(d, b, a, c);
+    return z;
+    }
+
+    This code is compiled and the assembly instructions for foo() is executed. What does the stack frame of foo() look like before the instructions of bar() runs? (Remember the stack grows down.)
+
+    A:
+        10, 2, 7, 8, return address
+
+12. Assume the following assembly code:
+    movl $3, %eax
+    movl $11, %ecx
+    leal 2(%ecx, %eax, 4), %eax
+    pushl %ecx 
+    pushl %eax
+    movl $8, %edx
+    popl %ecx
+    addl %ecx, %edx
+    popl %ecx
+    addl %ecx, %edx
+
+What are the final values (in decimal) stored in the following registers after executing the assembly instructions above?:
+
+    A:
+        %eax:  25
+        %ecx:  11
+        %edx:  44
+
+13. Instructions too long
+
+14. Sort the following memory/storage technologies in order of access latency (fastest to slowest):
+
+    DRAM, L2 Cache, Remote Webserver, Registers, Hard Drive, L1 Cache
+
+    A:
+        1. Registers
+        2. L1 Cache
+        3. L2 Cache
+        4. DRAM
+        5. Hard Drive
+        6. Remote Webserver
+
+15. Explain what the difference is between the a direct-mapped cache, n-associative cache, and fully associative cache. 
+
+    A:
+        A direct map cache only has 1 line per set (each block in memory can go into one block in cache only). You would need to find how many sets a direct has by doing the cache Size / block size.
+        An n-associative cache would have n lines per set unlike direct which has 1. You would also need to find how many sets an n-assoc has by doing the cache size / (block size * lines per set).
+        A fully associative cache only has 1 set. the lines per set would be the same as finding the sets for direct, or in this case lines per set is cache size / block size.
+
+16. Explain the difference between a write-through cache and a write-back cache.
+
+    A:
+        Write-through immediately writes data to memory when a write-hit occurs.
+        Write-back defers the write to memory as long as possible when a write-hit occurs.
+
+17. What issue would arise if we use higher order bits of an address as the set index instead of the middle order bits? 
+    A:
+        If the set index were higher order bits, there would be more conflicts and evictions as opposed to middle order bits.
+
+18. Cache Misses:
+
+    a.) What are conflict misses?
+    b.) Why does increasing cache associativity reduce conflict misses?
+
+    A:
+        A conflict miss occurs when the cache is not big enough. With that, the previously accessed block would be replaced and we would access the same replaced block.
+        Increasing associativity would prevent more blocks that map into a single set. Increasing associativity would provide less conflict misses.
+
+19. Suppose we have the following loop:
+
+    for(int i = 0; i < 100; i++){
+        a[i] = b[i] + c[i];
+    }
+
+    a.) Name 2 sources of temporal locality in the code.
+    b.) Name 2 sources of spatial locality in the code.
+
+    A:
+        a) a[i], b[i], and c[i] are all accessed frequently
+        b) b[i] and c[i] are have been recently accessed and are accessed in the near future.
+
+20. A computer is set up to use 32-bit addressing, a block size of 16 bytes, and has a 4-way associative cache with a capacity of 32KB. 
+
+    a.) How many cache lines are present in the cache?
+    b.) How many sets are there?
+    c.) What are the number of bits needed for the tag, set,  and block offset?
+
+    Show all work for full credit
+
+    A:
+        address = 32 assoc = 4 CacheSize = 32KB Block = 16
+
+        a) lines = 32 KB / 16 = 2^15/2^4 = 2^11 == 11 lines
+        b) sets = log2(cache size / block * assoc) = log2( 32 / 16 * 4) = log2(2^15/2^6) = log2(2^9) = 9
+        c) offset = log2(block) = log2(16) = 4
+        sets = log2(cache size / block * assoc) = log2( 32 / 16 * 4) = log2(2^15/2^6) = log2(2^9) = 9
+        tag = 32 - 4 - 9 = 19
+
+21. Assume we have the following cache configuration:
+    32 byte cache size. 
+    2-way associative cache
+    4 byte blocks
+    write-through cache
+    FIFO eviction policy
+
+    Assume the cache is initially empty. Given the following trace:
+
+    A:
+        Got it wrong
+
+22. Assume the following code multiplying two n x n matrices, A and B, into matrix C:
+
+    int x, y, z;
+    double m, sum;
+
+    for(x = 0 ; x < n; x++){
+        for(z = 0; z < n; z++){
+            m = A[x][z];
+            for(y = 0; y < n; y++){
+                C[x][y] += m * B[z][y];
+            }
+        }
+    }
+
+    A:
+        Got it wrong
+
+23. Assume the following boolean expression:
+    AB + BC
+
+    a.) Convert the expression so it can be implemented with only NAND gates.
+    b.) Assuming we can only use 2-input NAND gates, how many NAND gates would we need to implement the expression found in (a)?
+
+
+    a) AB +BC ->(AB)^c + (BC)^c -> ((AB)^c (BC)^c)^c -> ((AB)^c * (BC)^c)^c
+
+    b) Since there are 3 step conversions to make expression into nands, there will be 3 nand gates to be implemented.
+        (AB)^c is one
+        (BC)^c is another
+        ((AB)^c*(BC)^c)^c is the last
+
+24. (picture of circuit)
+
+    a.) Construct the the truth table for this circuit.
+    b.) Derive the unsimplified boolean expression for the circuit using minterms.
+    c.) Simply the unsimplified boolean expression using boolean algebra. Show all work. 
+    d.) Show the kmap for the truth table. No need to highlight the kmaps, simply just construct them. What is the simplified boolean expression that you get from the kmap?
+    e.) Assume you can use gates that can have any number of inputs. What is number of gates needed to implement the simplified boolean expression.
+
+    A:
+        A	B	C	A^c	     A^cC	    A^cB	AC	A^cC+A^cB+AC
+        0	0	0	 1	        0	      0	    0	    0
+        0	0	1	 1	        1	      0	    0	    1
+        0	1	0	 1	        0	      1	    0	    1
+        0	1	1	 1	        1	      1	    0	    1
+        1	0	0	 0	        0	      0	    0	    0
+        1	0	1	 0	        0	      0	    1	    1
+        1	1	0	 0	        0	      0	    0	    0
+        1	1	1	 0	        0	      0	    1	    1
+
+        B) A^cC+ A^cB +AC
+
+        C)
+            F =  A^cC+ A^cB +AC
+            F = C(A^c+A) + A^cB
+            F = C + A^cB
+
+        D)
+            got it wrong
+        
+        F = A^cC + A^cB + AB
+
+        E)  since the simplified is A^cB + C we would need 3 gates to get to this point.
+
+25. Too long and got it wrong :(
+
+26. Design an FSM that detects the input stream encountered (when the input stream is interpreted as an unsigned binary representation of a number, the left most bit being the most significant bit and rightmost bit being the least significant bit) is divisible by 4 with a non- zero quotient. 
+
+    INPUT: 10010100...
+    OUTPUT: 00100001...
+
+    a.) Describe the different states in your FSM. (Hint: may be helpful to construct a FSM diagram first)
+    b.) Construct a table encoding your states.
+    c.) Construct a state transition table for your FSM using the encoded states. 
+    d.) Derive the boolean expressions for the next state based on the current state and the bit input b.
+    e.) Derive the boolean expression for the output based on the current state.
+
+    A:
+        a) there will be 4 different states in the fsm
+
+        b) 
+            a = 00
+            b = 01
+            c = 10
+            d = 11
+
+        c)
+        a	b	inpt	a`	b`	out
+        o	o	0	    0	0	0
+        o	o	1	    0	1	0
+        o	1	0	    1	0	0
+        o	1	1	    0	1	0
+        1	o	0	    1	1	0
+        1	o	1	    0	1	0
+        1	1	0	    1	1	1
+        1	1	1	    0	1	1
+
+        d)
+        
+        e) F = ab
